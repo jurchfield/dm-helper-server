@@ -1,0 +1,14 @@
+{
+  "name": "dm-helper-server",
+  "version": "0.1.0",
+  "description": "The Server for our DM Helper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Burchfield",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-functions": "^2.1.0"
+  }
+}
