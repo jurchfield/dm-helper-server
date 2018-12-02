@@ -1,2 +1,4 @@
-# dm-helper-server
-Server for DM Helper
+# Overview
+Server functions for the DM Helper application. 
+
+
