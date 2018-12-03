@@ -2,6 +2,8 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const characters = require('./characters');
 const creatures = require('./creatures');
+const spells = require('./spells');
+const weapons = require('./weapons');
 const cors = require('cors')({
   origin: true,
 });
@@ -22,4 +24,14 @@ exports.characters = functions.https.onRequest((req, res) => {
 /** CREATURES API */
 exports.creatures = functions.https.onRequest((req, res) => {
   return cors(req, res, () => creatures.handler(req, res, database));
+});
+
+/** SPELLS API */
+exports.spells = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => spells.handler(req, res));
+});
+
+/** WEAPONS API */
+exports.weapons = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => weapons.handler(req, res));
 });
