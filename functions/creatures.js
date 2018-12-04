@@ -15,20 +15,33 @@ function PUT(req, res, db) {
 }
 
 function GET(req, res, db) {
-  // db
-  // .collection("creatures")
-  // .where("name", "==", "Horned Devil")
-  // .get()
-  // .then((snapshot) => {
-  //   console.log(snapshot)
-  //   const result = snapshot.map(doc => doc.data());
-  //   return res.status(200).send(result);
-  // })
-  // .catch(err => res.status(500).send(err));
   firestore
     .backup(db, creaturesCollection)
-    .then(({ creatures }) => res.status(200).send(Object.keys(creatures).map(id => creatures[id])))
+    .then(({ creatures }) => {
+      const result = Object.keys(creatures)
+        .map(id => Object.assign(creatures[id], getModifiers(creatures[id])))
+        
+      return res.status(200).send(result);
+    })
     .catch(err => res.status(500).send(err));
+}
+
+function getModifiers({
+  dexterity,
+  constitution,
+  strength,
+  charisma,
+  intelligence,
+  wisdom,
+}) {
+  return {
+    dexterity_modifier: Math.floor((dexterity - 10) / 2),
+    constitution_modifier: Math.floor((constitution - 10) / 2),
+    strength_modifier: Math.floor((strength - 10) / 2),
+    charisma_modifier: Math.floor((charisma - 10) / 2),
+    intelligence_modifier: Math.floor((intelligence - 10) / 2),
+    wisdom_modifier: Math.floor((wisdom - 10) / 2),
+  }
 }
 
 function OPTIONS(req, res) {

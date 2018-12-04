@@ -1,11 +1,11 @@
 const axios = require('axios');
 
 function modifyValue(val) {
-  const id = val.slice(-1);
+  const url = val.replace('http://www.dnd5eapi.co/api/spells/', '')
 
-  return val
-    .slice(0, -2)
-    .replace('http://www.dnd5eapi.co/api/spells', `https://us-central1-dm-helper-1f262.cloudfunctions.net/spells?id=${id}`)
+  const id = url.match(/\d+/)[0];
+
+  return `https://us-central1-dm-helper-1f262.cloudfunctions.net/spells?id=${id}`;
 }
 
 exports.handler = (req, res) => {
