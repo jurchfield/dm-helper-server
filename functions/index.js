@@ -28,10 +28,10 @@ exports.creatures = functions.https.onRequest((req, res) => {
 
 /** SPELLS API */
 exports.spells = functions.https.onRequest((req, res) => {
-  return cors(req, res, () => spells.handler(req, res));
+  return cors(req, res, () => spells.handler(req, res, database));
 });
 
 /** WEAPONS API */
 exports.weapons = functions.https.onRequest((req, res) => {
-  return cors(req, res, () => weapons.handler(req, res));
+  return cors(req, res, () => weapons.handler(req, res, database));
 });

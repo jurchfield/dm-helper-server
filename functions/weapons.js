@@ -1,27 +1,28 @@
-const axios = require('axios');
+const { firestore } = require('firebase-functions-helper');
 
-function modifyValue(val) {
-  const url = val.replace('http://www.dnd5eapi.co/api/equipment/', '')
+const weaponsCollection = 'equipment';
 
-  const id = url.match(/\d+/)[0];
+function POST(req, res, db) {
+  firestore.createNewDocument(db, weaponsCollection, req.body);
 
-  return `https://us-central1-dm-helper-1f262.cloudfunctions.net/weapons?id=${id}`;
+  res.status(200).send('Created a new item');
 }
 
-exports.handler = (req, res) => {
-  if (req.method !== 'GET') return res.status(403);
+function PUT(req, res, db) {
+  res.status(403).send({ message: 'Put is forbidden at this time :(' });
+}
 
-  if (req.query.id) {
-    axios.get(`http://www.dnd5eapi.co/api/equipment/${req.query.id}`)
-    .then(({ data }) => {
-      return res.status(200).send(data);
-    })
-    .catch((e) => res.status(500).send(e));
-  } else {
-    axios.get('http://www.dnd5eapi.co/api/equipment?type=weapon')
-      .then(({ data: { results } }) => {
-        return res.status(200).send(results.map(({ name, url }) => ({ label: name, value: modifyValue(url) })));
-      })
-      .catch((e) => res.status(500).send(e));
-  }
+function GET(req, res, db) {
+  firestore
+    .backup(db, weaponsCollection)
+    .then(({ equipment }) => res.status(200).send(Object.keys(equipment).map(id => equipment[id]).filter(e => e.equipment_category === 'Weapon')))
+    .catch(err => res.status(500).send(err));
+}
+
+exports.handler = (req, res, db) => {
+  return {
+    POST,
+    PUT,
+    GET,
+  }[req.method](req, res, db);
 }

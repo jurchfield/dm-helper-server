@@ -1,28 +1,28 @@
-const axios = require('axios');
+const { firestore } = require('firebase-functions-helper');
 
-function modifyValue(val) {
-  const url = val.replace('http://www.dnd5eapi.co/api/spells/', '')
+const spellsCollection = 'spells';
 
-  const id = url.match(/\d+/)[0];
+function POST(req, res, db) {
+  firestore.createNewDocument(db, spellsCollection, req.body);
 
-  return `https://us-central1-dm-helper-1f262.cloudfunctions.net/spells?id=${id}`;
+  res.status(200).send('Created a new spell');
 }
 
-exports.handler = (req, res) => {
-  if (req.method !== 'GET') return res.status(403);
+function PUT(req, res, db) {
+  res.status(403).send({ message: 'Put is forbidden at this time :(' });
+}
 
-  if (req.query.id) {
-    axios.get(`http://www.dnd5eapi.co/api/spells/${req.query.id}`)
-    .then(({ data }) => {
-      return res.status(200).send(data)
-    })
-    .catch((e) => res.status(500).send(e));
-  } else {
-    axios.get('http://www.dnd5eapi.co/api/spells')
-      .then(({ data: { results } }) => {
-        return res.status(200).send(results.map(({ name, url }) => ({ label: name, value: modifyValue(url) })))
-      })
-      .catch((e) => res.status(500).send(e));
-  }
-  
+function GET(req, res, db) {
+  firestore
+    .backup(db, spellsCollection)
+    .then(({ spells }) => res.status(200).send(Object.keys(spells).map(id => spells[id])))
+    .catch(err => res.status(500).send(err));
+}
+
+exports.handler = (req, res, db) => {
+  return {
+    POST,
+    PUT,
+    GET,
+  }[req.method](req, res, db);
 }
