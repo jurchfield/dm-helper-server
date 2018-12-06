@@ -20,6 +20,11 @@ function GET(req, res, db) {
     .then(({ creatures }) => {
       const result = Object.keys(creatures)
         .map(id => Object.assign(creatures[id], getModifiers(creatures[id])))
+        .sort((a, b) => {
+          if(a.name < b.name) { return -1; }
+          if(a.name > b.name) { return 1; }
+          return 0;
+      });
         
       return res.status(200).send(result);
     })
