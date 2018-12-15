@@ -14,8 +14,8 @@ function PUT(req, res, db) {
 
 function GET(req, res, db) {
   firestore
-    .backup(db, weaponsCollection)
-    .then(({ equipment }) => res.status(200).send(Object.keys(equipment).map(id => equipment[id]).filter(e => e.equipment_category === 'Weapon')))
+    .queryData(db, weaponsCollection, [ 'equipment_category', '==', 'Weapon' ])
+    .then((equipment) => res.status(200).send(Object.keys(equipment).map(id => equipment[id])))
     .catch(err => res.status(500).send(err));
 }
 
