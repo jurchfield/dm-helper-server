@@ -4,6 +4,7 @@ const characters = require('./characters');
 const creatures = require('./creatures');
 const spells = require('./spells');
 const weapons = require('./weapons');
+const encounters = require('./encounters');
 const cors = require('cors')({
   origin: true,
 });
@@ -15,6 +16,7 @@ admin.initializeApp(functions.config().firebase);
 admin.firestore().settings(settings);
 
 const database = admin.firestore();
+const auth = admin.auth();
 
 /** CHARACTERS API */
 exports.characters = functions.https.onRequest((req, res) => {
@@ -34,4 +36,9 @@ exports.spells = functions.https.onRequest((req, res) => {
 /** WEAPONS API */
 exports.weapons = functions.https.onRequest((req, res) => {
   return cors(req, res, () => weapons.handler(req, res, database));
+});
+
+/** ENCOUNTERS API */
+exports.encounters = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => encounters.handler(req, res, database, auth));
 });
