@@ -23,7 +23,7 @@ function GET(req, res, db) {
 exports.handler = (req, res, db, auth) => {
   const token = req.header('Token');
 
-  if (!token) return res.status(401).send({ message: 'No token. Please log in to fetch encounters' });
+  if (!token) return res.status(401).send({ message: 'No token. Please log in to use encounters' });
 
   return auth
     .verifyIdToken(token)

@@ -20,10 +20,17 @@ function GET(req, res, db) {
     .catch(err => res.status(500).send(err));
 }
 
-exports.handler = (req, res, db) => {
-  return {
-    POST,
-    PUT,
-    GET,
-  }[req.method](req, res, db);
+exports.handler = (req, res, db, auth) => {
+  const token = req.header('Token');
+
+  if (!token) return res.status(401).send({ message: 'No token. Please log in to use characters' });
+
+  return auth
+  .verifyIdToken(token)
+  .then(({ uid }) => ({
+      POST,
+      PUT,
+      GET,
+    })[req.method](req, res, db, uid))
+  .catch(error  => res.status(500).send({ message: 'Error verifying token. Please log in again', error }));
 }

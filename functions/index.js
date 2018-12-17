@@ -5,6 +5,9 @@ const creatures = require('./creatures');
 const spells = require('./spells');
 const weapons = require('./weapons');
 const encounters = require('./encounters');
+const races = require('./races');
+const classes = require('./classes');
+const subclasses = require('./subclasses')
 const cors = require('cors')({
   origin: true,
 });
@@ -17,11 +20,6 @@ admin.firestore().settings(settings);
 
 const database = admin.firestore();
 const auth = admin.auth();
-
-/** CHARACTERS API */
-exports.characters = functions.https.onRequest((req, res) => {
-  return cors(req, res, () => characters.handler(req, res, database))
-});
 
 /** CREATURES API */
 exports.creatures = functions.https.onRequest((req, res) => {
@@ -41,4 +39,24 @@ exports.weapons = functions.https.onRequest((req, res) => {
 /** ENCOUNTERS API */
 exports.encounters = functions.https.onRequest((req, res) => {
   return cors(req, res, () => encounters.handler(req, res, database, auth));
+});
+
+/** CHARACTERS API */
+exports.characters = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => characters.handler(req, res, database, auth))
+});
+
+/** RACES API */
+exports.races = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => races.handler(req, res, database, auth))
+});
+
+/** CLASSES API */
+exports.classes = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => classes.handler(req, res, database, auth))
+});
+
+/** SUBCLASSES API */
+exports.subclasses = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => subclasses.handler(req, res, database, auth))
 });
