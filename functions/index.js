@@ -7,7 +7,9 @@ const weapons = require('./weapons');
 const encounters = require('./encounters');
 const races = require('./races');
 const classes = require('./classes');
-const subclasses = require('./subclasses')
+const subclasses = require('./subclasses');
+const traits = require('./traits');
+const features = require('./features');
 const cors = require('cors')({
   origin: true,
 });
@@ -59,4 +61,14 @@ exports.classes = functions.https.onRequest((req, res) => {
 /** SUBCLASSES API */
 exports.subclasses = functions.https.onRequest((req, res) => {
   return cors(req, res, () => subclasses.handler(req, res, database, auth))
+});
+
+/** TRAITS API */
+exports.traits = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => traits.handler(req, res, database, auth))
+});
+
+/** TRAITS API */
+exports.features = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => features.handler(req, res, database, auth))
 });
