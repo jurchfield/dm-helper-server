@@ -10,6 +10,7 @@ const classes = require('./classes');
 const subclasses = require('./subclasses');
 const traits = require('./traits');
 const features = require('./features');
+const equipment = require('./equipment');
 const cors = require('cors')({
   origin: true,
 });
@@ -68,7 +69,12 @@ exports.traits = functions.https.onRequest((req, res) => {
   return cors(req, res, () => traits.handler(req, res, database, auth))
 });
 
-/** TRAITS API */
+/** FEATURES API */
 exports.features = functions.https.onRequest((req, res) => {
   return cors(req, res, () => features.handler(req, res, database, auth))
+});
+
+/** EQUIPMENT API */
+exports.equipment = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => equipment.handler(req, res, database, auth))
 });
