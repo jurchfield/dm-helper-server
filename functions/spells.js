@@ -1,4 +1,5 @@
 const { firestore } = require('firebase-functions-helper');
+const { constructListResponse } = require('./shared');
 
 const spellsCollection = 'spells';
 
@@ -15,7 +16,7 @@ function PUT(req, res, db) {
 function GET(req, res, db) {
   firestore
     .backup(db, spellsCollection)
-    .then(({ spells }) => res.status(200).send(Object.keys(spells).map(id => spells[id])))
+    .then(({ spells }) => res.status(200).send(constructListResponse(spells)))
     .catch(err => res.status(500).send(err));
 }
 

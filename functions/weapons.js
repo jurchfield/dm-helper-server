@@ -1,4 +1,5 @@
 const { firestore } = require('firebase-functions-helper');
+const { constructListResponse } = require('./shared');
 
 const weaponsCollection = 'equipment';
 
@@ -15,7 +16,7 @@ function PUT(req, res, db) {
 function GET(req, res, db) {
   firestore
     .queryData(db, weaponsCollection, [ 'equipment_category', '==', 'Weapon' ])
-    .then((equipment) => res.status(200).send(Object.keys(equipment).map(id => equipment[id])))
+    .then((equipment) => res.status(200).send(constructListResponse(equipment)))
     .catch(err => res.status(500).send(err));
 }
 
