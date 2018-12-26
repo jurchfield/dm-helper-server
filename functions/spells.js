@@ -1,23 +1,21 @@
 const { firestore } = require('firebase-functions-helper');
-const { constructListResponse } = require('./shared');
+const { constructListResponse, handleError } = require('./shared');
 
 const spellsCollection = 'spells';
 
 function POST(req, res, db) {
-  firestore.createNewDocument(db, spellsCollection, req.body);
-
-  res.status(200).send('Created a new spell');
+  res.status(403).send({ message: 'Post is forbidden' });
 }
 
 function PUT(req, res, db) {
-  res.status(403).send({ message: 'Put is forbidden at this time :(' });
+  res.status(403).send({ message: 'Put is forbidden' });
 }
 
 function GET(req, res, db) {
   firestore
     .backup(db, spellsCollection)
     .then(({ spells }) => res.status(200).send(constructListResponse(spells)))
-    .catch(err => res.status(500).send(err));
+    .catch(err => handleError('Error fetching spells', res, err));
 }
 
 exports.handler = (req, res, db) => {

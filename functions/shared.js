@@ -16,3 +16,7 @@ exports.constructListResponse = (res) => {
       return 0;
     });
 }
+
+exports.handleError = (message, res, err = new Error('No further information')) => {
+  return res.status(500).send({ message, error: err.message });
+}

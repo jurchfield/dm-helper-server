@@ -1,18 +1,14 @@
 const { firestore } = require('firebase-functions-helper');
-const { sortByName } = require('./shared');
+const { sortByName, handleError } = require('./shared');
 
 const creaturesCollection = 'creatures';
 
 function POST(req, res, db) {
-  firestore.createNewDocument(db, creaturesCollection, req.body);
-
-  res.status(200).send('Created a new character');
+  res.status(403).send({ message: 'Post is forbidden' });
 }
 
 function PUT(req, res, db) {
-  firestore
-    .updateDocument(db, creaturesCollection, req.params.characterId, req.body);
-  res.status(200).send('Update a new character');
+  res.status(403).send({ message: 'Put is forbidden' });
 }
 
 function GET(req, res, db) {
@@ -24,7 +20,7 @@ function GET(req, res, db) {
         
       return res.status(200).send(result);
     })
-    .catch(err => res.status(500).send(err));
+    .catch(err => handleError('Error Fetching Creatures', res, err));
 }
 
 function getModifiers({

@@ -1,23 +1,21 @@
 const { firestore } = require('firebase-functions-helper');
-const { constructListResponse } = require('./shared');
+const { constructListResponse, handleError } = require('./shared');
 
 const traitsCollection = 'traits';
 
 function POST({ body }, res, db) {
-  firestore.createNewDocument(db, traitsCollection, body);
-
-  res.status(200).send({ message: 'Created a new trait' });
+  res.status(403).send({ message: 'Post is forbidden' });
 }
 
 function PUT(req, res, db) {
-  res.status(403).send({ message: 'Put is forbidden at this time :(' });
+  res.status(403).send({ message: 'Put is forbidden' });
 }
 
 function GET(req, res, db) {
   firestore
     .backup(db, traitsCollection)
     .then(({ traits }) => res.status(200).send(constructListResponse(traits)))
-    .catch(err => res.status(500).send(err));
+    .catch(err => handleError('Error fetching traits', res, err));
 }
 
 exports.handler = (req, res, db) => {
